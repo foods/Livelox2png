@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livelox2png", "Livelox2png.csproj", "{B703EAFD-4165-42F9-9F55-3A2A106EB84F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B703EAFD-4165-42F9-9F55-3A2A106EB84F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B703EAFD-4165-42F9-9F55-3A2A106EB84F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B703EAFD-4165-42F9-9F55-3A2A106EB84F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B703EAFD-4165-42F9-9F55-3A2A106EB84F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E1A4216-5803-4756-858A-74BC1EFA78C5}
+	EndGlobalSection
+EndGlobal
