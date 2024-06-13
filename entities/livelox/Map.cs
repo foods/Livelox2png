@@ -7,4 +7,8 @@ internal class Map
     public required string Url { get; set; }
     public required Rectangle BoundingQuadrilateral { get; set; }
     public required Rectangle Polygon { get; set; }
+    public required Projection DefaultProjection { get; set; }
+    public double Rotation { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
 }
