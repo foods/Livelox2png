@@ -18,4 +18,10 @@ public static class LinearAlgebraUtil
         return new PointD(rotated.GetElement(0, 0), rotated.GetElement(1, 0));
     }
 
+    public static PointD Normalize(PointD vector)
+    {
+        if (vector.X == 0.0 && vector.Y == 0.0) return new PointD(0.0, 0.0);
+        double length = Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
+        return new PointD(vector.X / length, vector.Y / length);
+    }
 }
