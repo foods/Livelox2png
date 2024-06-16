@@ -112,8 +112,8 @@ internal class CourseDrawer
         var pos = coord.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
 
         // a = side length of triangle
-        var aOuter = control.SymbolSize != 0.0 ? (float)control.SymbolSize * 4.6f : 62f;
-        var aInner = control.SymbolLineWidth != 0.0 ? aOuter - (float)control.SymbolLineWidth * 4.6f : 50f;
+        var aOuter = control.SymbolSize != 0.0 ? (float)Math.Min(control.SymbolSize, 14f) * 4.6f : 62f;
+        var aInner = control.SymbolLineWidth != 0.0 ? aOuter - (float)control.SymbolLineWidth * 8f : 50f;
 
         // r = radius of inscribed circle
         var rOuter = Math.Sqrt(3) * aOuter / 6;
@@ -128,9 +128,9 @@ internal class CourseDrawer
         };
 
         var inner = new PointD[] {
-            new((float)pos.X, (float)pos.Y - altitudeInner + rInner), // top
-            new((float)pos.X + aInner / 2, (float)pos.Y + rInner), // bottom right
-            new((float)pos.X - aInner / 2, (float)pos.Y + rInner), // bottom left
+            new(pos.X, pos.Y - altitudeInner + rInner), // top
+            new(pos.X + aInner / 2, pos.Y + rInner), // bottom right
+            new(pos.X - aInner / 2, pos.Y + rInner), // bottom left
         };
 
         // Angle to first control

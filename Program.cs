@@ -27,8 +27,8 @@ Console.WriteLine("-- Livelox map with course extractor --");
 //    return;
 //}
 
-//Uri classBlobUri = new Uri("https://livelox.blob.core.windows.net/class-storage/0000747178_3926681217747");
-Uri classBlobUri = new Uri("https://livelox.blob.core.windows.net/class-storage/0000770267_3926426158285");
+Uri classBlobUri = new Uri("https://livelox.blob.core.windows.net/class-storage/0000747178_3926681217747");
+//Uri classBlobUri = new Uri("https://livelox.blob.core.windows.net/class-storage/0000770267_3926426158285");
 
 var liveloxClient = new LiveloxClient();
 var activity = await liveloxClient.FetchActivity(classBlobUri);
