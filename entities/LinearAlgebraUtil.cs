@@ -24,4 +24,9 @@ public static class LinearAlgebraUtil
         double length = Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
         return new PointD(vector.X / length, vector.Y / length);
     }
+
+    public static double LineDistance(PointD p0, PointD p1)
+    {
+        return Math.Sqrt((p1.X - p0.X) * (p1.X - p0.X) + (p1.Y - p0.Y) * (p1.Y - p0.Y));
+    }
 }

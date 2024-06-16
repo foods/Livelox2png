@@ -40,6 +40,12 @@ public class Coordinate
         return new PointD(rho * Math.Cos(phi) * Math.Sin(lambda - lambda0),
                           rho * (Math.Cos(phi0) * Math.Sin(phi) - Math.Sin(phi0) * Math.Cos(phi) * Math.Cos(lambda - lambda0)));
     }
+
+    public PointD ProjectAndTransform(Coordinate projectionOrigin, Matrix transformationMatrix) {
+        return (transformationMatrix * Project(projectionOrigin).To3x1Matrix()).ToPointD();
+    }
+
+
     public Matrix To3x1Matrix()
     {
         Matrix m = new Matrix(3, 1);

@@ -1,4 +1,5 @@
 ﻿using Livelox2png.entities;
+using Microsoft.Extensions.Configuration;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
@@ -17,11 +18,14 @@ internal class CourseDrawer
     private readonly Image image;
     private readonly DrawingOptions drawingOptions;
     private readonly Rgba32 purple = new(192, 42, 186);
-    public CourseDrawer(Map map, Activity activity, Image image)
+    private readonly ActivityExtractor activityExtractor;
+    
+    public CourseDrawer(Map map, Activity activity, Image image, IConfigurationRoot config)
     {
         this.map = map;
         this.activity = activity;
         this.image = image;
+        activityExtractor = new ActivityExtractor(activity, config);
 
         drawingOptions = new DrawingOptions()
         {
@@ -35,10 +39,13 @@ internal class CourseDrawer
     private void DrawPath(IPath path) => image.Mutate(x => x.Fill(drawingOptions, purple, path));
 
 
+    /// <summary>
+    /// Draws the course (based on the participant) onto the map image
+    /// </summary>
     public void Draw()
     {
-
-        var controls = activity.Courses?.First()?.Controls ?? [];
+        var course = activityExtractor.GetCourse();
+        var controls = course.Controls ?? [];
         for (var i = 0; i < controls.Count; i++)
         {
             var control = controls[i].Control;
@@ -72,6 +79,10 @@ internal class CourseDrawer
         }
     }
 
+    /// <summary>
+    /// Draws a standard control ring
+    /// </summary>
+    /// <param name="control">The control</param>
     private void DrawControlRing(Control control)
     {
         var ctrlCoord = new Coordinate
@@ -79,9 +90,7 @@ internal class CourseDrawer
             Latitude = control.Position.Latitude,
             Longitude = control.Position.Longitude
         };
-        var pos = ctrlCoord.Project(map.ProjectionOrigin);
-        var posP = LinearAlgebraUtil.Transform(pos, map.ProjectionMatrix);
-        Console.WriteLine($"Control {control.Code}: {posP}");
+        var posP = ctrlCoord.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
 
         var size = control.SymbolSize != 0.0 ? (float)control.SymbolSize * 2.3f : 31f;
         var innerSize = control.SymbolLineWidth != 0.0 ? size - (float)control.SymbolLineWidth * 2.3f : 27f;
@@ -93,20 +102,123 @@ internal class CourseDrawer
         DrawPath(controlPath);
     }
 
+    /// <summary>
+    /// Draws a start symbyl
+    /// </summary>
+    /// <param name="control">The start</param>
+    /// <param name="nextControl">The first control (to determine angle)</param>
     private void DrawStart(Control control, Control nextControl) { }
 
-    private void DrawFinish(Control control) { }
+    /// <summary>
+    /// Draws a finish symbol
+    /// </summary>
+    /// <param name="control">The finish control</param>
+    private void DrawFinish(Control control) {
+        var ctrlCoord = new Coordinate
+        {
+            Latitude = control.Position.Latitude,
+            Longitude = control.Position.Longitude
+        };
+        var posP = ctrlCoord.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
 
-    private void DrawLine(Control control1, Control control2) { }
+        // Do four circles, clipping every other
 
+        var bigOuter = control.SymbolSize != 0.0 ? (float)control.SymbolSize * 2.5f : 34f;
+        var lineWidth = control.SymbolLineWidth != 0.0 ? (float)control.SymbolLineWidth * 2.3f : 4f;
+        var bigInner = bigOuter - lineWidth;
+
+        var smallOuter = bigOuter * 0.7f;
+        var smallInner = smallOuter - lineWidth;
+
+        // Big circle
+        EllipsePolygon bigOuterCircle = new EllipsePolygon((float)posP.X, (float)posP.Y, bigOuter);
+        // Cut out a circle
+        IPath bigControlPath = bigOuterCircle.Clip(new EllipsePolygon((float)posP.X, (float)posP.Y, bigInner));
+
+        DrawPath(bigControlPath);
+
+        // Small circle
+        EllipsePolygon smallOuterCircle = new EllipsePolygon((float)posP.X, (float)posP.Y, smallOuter);
+        // Cut out a circle
+        IPath smallControlPath = smallOuterCircle.Clip(new EllipsePolygon((float)posP.X, (float)posP.Y, smallInner));
+
+        DrawPath(smallControlPath);
+    }
+
+    /// <summary>
+    /// Draws a line between two controls
+    /// </summary>
+    /// <param name="control1">First control</param>
+    /// <param name="control2">Second control</param>
+    private void DrawLine(Control control1, Control control2) {
+        var controlLine = GetControlToControlLine(control1, control2);
+        var points = new PointF[] {
+            new PointF((float)controlLine.from.X, (float)controlLine.from.Y),
+            new PointF((float)controlLine.to.X, (float)controlLine.to.Y),
+        };
+        var lineWidth = (float)Math.Max(Math.Max(control1.SymbolLineWidth, control2.SymbolLineWidth), 4f);
+
+        image.Mutate(x => x.DrawLine(drawingOptions, Pens.Solid(purple, lineWidth), points));
+    }
+
+    /// <summary>
+    /// Gets a line (to be drawn) between two controls
+    /// </summary>
+    /// <param name="control1">First control</param>
+    /// <param name="control2">Second control</param>
+    /// <returns>A structure type with the first and second xy-point of the line</returns>
+    private (PointD from, PointD to) GetControlToControlLine(Control control1, Control control2) {
+        var coord1 = new Coordinate() { Latitude = control1.Position.Latitude, Longitude = control1.Position.Longitude };
+        var coord2 = new Coordinate() { Latitude = control2.Position.Latitude, Longitude = control2.Position.Longitude };
+        var pos1 = coord1.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
+        var pos2 = coord2.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
+
+        var symbolSize = Math.Min(control1.SymbolSize, control2.SymbolSize);
+        var clipLength = symbolSize != 0.0 ? (float)symbolSize * 3.0f : 40f;
+
+        var centerToCenterDist = LinearAlgebraUtil.LineDistance(pos1, pos2);
+        var fromCenterLength = centerToCenterDist / 2 - clipLength;
+
+        if (pos1.X == pos2.X)
+        {
+            return (
+                new PointD(pos1.X, pos1.Y > pos2.Y ? pos1.Y - fromCenterLength : pos1.Y + fromCenterLength),
+                new PointD(pos2.X, pos2.Y > pos1.Y ? pos2.Y - fromCenterLength : pos2.Y + fromCenterLength));
+        }
+
+        var k = (pos2.Y - pos1.Y) / (pos2.X - pos1.X);
+
+        // width from center of line
+        var b = Math.Sqrt(fromCenterLength * fromCenterLength / (k * k + 1));
+        // height from center of line
+        var h = b * k;
+        // as a vector
+        var diffVector = new PointD(b, h);
+
+        var centerOfLine = new PointD((pos1.X + pos2.X) / 2, (pos1.Y + pos2.Y) / 2);
+
+        return (centerOfLine - diffVector, centerOfLine + diffVector);
+    }
+
+    /// <summary>
+    /// Plots the control number onto the map image. Previous and next control needs to
+    /// be provided in order to determine the location of the text. Text is trivially
+    /// placed on the outside of the corner created by the "in" and "out" line to and
+    /// from the control
+    /// </summary>
+    /// <param name="control">the control</param>
+    /// <param name="previous">previous control</param>
+    /// <param name="next">next control</param>
+    /// <param name="controlNumber">control number</param>
     private void DrawControlNumber(Control control, Control previous, Control next, int controlNumber) {
+        // The control number 
         var posPrevCoord = new Coordinate() { Latitude = previous.Position.Latitude, Longitude = previous.Position.Longitude };
         var posCoord = new Coordinate() { Latitude = control.Position.Latitude, Longitude = control.Position.Longitude };
         var posNextCoord = new Coordinate() { Latitude = next.Position.Latitude, Longitude = next.Position.Longitude };
 
-        var posPrev = LinearAlgebraUtil.Transform(posPrevCoord.Project(map.ProjectionOrigin), map.ProjectionMatrix);
-        var pos = LinearAlgebraUtil.Transform(posCoord.Project(map.ProjectionOrigin), map.ProjectionMatrix);
-        var posNext = LinearAlgebraUtil.Transform(posNextCoord.Project(map.ProjectionOrigin), map.ProjectionMatrix);
+        var posPrev = posPrevCoord.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
+        var pos = posCoord.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
+        var posNext = posNextCoord.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
 
         // Consider the previous and next control as vectors from control. Add them
         var vectorPrev = LinearAlgebraUtil.Normalize(posPrev - pos);

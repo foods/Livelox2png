@@ -37,7 +37,7 @@ using var image = await liveloxClient.FetchMapFile(activity.Map.Url);
 
 var map = new Livelox2png.entities.Map(activity);
 
-var courseDrawer = new CourseDrawer(map, activity, image);
+var courseDrawer = new CourseDrawer(map, activity, image, config);
 courseDrawer.Draw();
 
 await MapSaver.SaveMap(image, activity, config);
