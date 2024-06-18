@@ -13,7 +13,7 @@ internal class ActivityExtractor
         this.activity = activity;
         this.config = config;
     }
-    
+
     /// <summary>
     /// Fetches the participant that matches the name and org from appsettings.
     /// 
@@ -22,7 +22,7 @@ internal class ActivityExtractor
     /// <returns></returns>
     public Participant? GetParticipant()
     {
-        if (activity.Participants ==  null)
+        if (activity.Participants == null)
         {
             return null;
         }
@@ -42,7 +42,8 @@ internal class ActivityExtractor
             throw new Exception("No courses in this activity. Unable to extract");
         }
         var participant = GetParticipant();
-        if (participant == null) {
+        if (participant == null)
+        {
             return activity.Courses.First();
         }
         return activity.Courses.First(c => c.Classes.Any(cl => cl.Id == participant.ClassId));

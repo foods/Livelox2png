@@ -13,7 +13,7 @@ Console.WriteLine("-- Livelox map with course extractor --");
 
 //if (args.Length != 2)
 //{
-//    Console.WriteLine("Missing argument, should be URL like 'https://livelox.blob.core.windows.net/class-storage/0000747178_3926681217747'");
+//    Console.WriteLine("Missing argument, should be URL of event, like 'https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272&tab=player'");
 //    return;
 //}
 //Uri classBlobUri;
@@ -27,8 +27,9 @@ Console.WriteLine("-- Livelox map with course extractor --");
 //    return;
 //}
 
-Uri classBlobUri = new Uri("https://livelox.blob.core.windows.net/class-storage/0000747178_3926681217747");
-//Uri classBlobUri = new Uri("https://livelox.blob.core.windows.net/class-storage/0000770267_3926426158285");
+//string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272&tab=player";
+//string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-2/H45?classId=770267&tab=player";
+string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272&tab=player";
 
 var liveloxClient = new LiveloxClient();
 var activity = await liveloxClient.FetchActivity(classBlobUri);

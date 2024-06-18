@@ -11,7 +11,7 @@ internal class Map
     public double ScaleX { get; set; }
     public double ScaleY { get; set; }
     public Coordinate ProjectionOrigin { get; set; }
-    public Matrix ProjectionMatrix {get; set;}
+    public Matrix ProjectionMatrix { get; set; }
 
     public Map(Activity activity)
     {
@@ -22,7 +22,8 @@ internal class Map
         Rotation = -activity.Map.Rotation * MathF.PI / 180.0;
         Width = activity.Map.Width;
         Height = activity.Map.Height;
-        Corners = new MapCorners {
+        Corners = new MapCorners
+        {
             SouthWest = new Coordinate
             {
                 Latitude = activity.Map.Polygon.Vertices[0].Latitude,
@@ -68,7 +69,8 @@ internal class Map
         ScaleX = (double)Width * 2 / (mapWidthDegrees + mapWidthDegreesCtrl);
         ScaleY = (double)Height * 2 / (mapHeightDegrees + mapHeightDegreesCtrl);
 
-        ProjectionOrigin = new Coordinate {
+        ProjectionOrigin = new Coordinate
+        {
             Latitude = activity.Map.DefaultProjection.Origin.Latitude,
             Longitude = activity.Map.DefaultProjection.Origin.Longitude,
         };

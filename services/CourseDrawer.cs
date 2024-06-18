@@ -19,7 +19,7 @@ internal class CourseDrawer
     private readonly DrawingOptions drawingOptions;
     private readonly Rgba32 purple = new(192, 42, 186);
     private readonly ActivityExtractor activityExtractor;
-    
+
     public CourseDrawer(Map map, Activity activity, Image image, IConfigurationRoot config)
     {
         this.map = map;
@@ -50,7 +50,7 @@ internal class CourseDrawer
         {
             var control = controls[i].Control;
 
-            switch(control.Type)
+            switch (control.Type)
             {
                 case entities.livelox.ControlType.Start:
                     if (controls.Count >= i)
@@ -67,9 +67,9 @@ internal class CourseDrawer
                     break;
 
             }
-            if (controls.Count > i+1)
+            if (controls.Count > i + 1)
             {
-                DrawLine(control, controls[i+1].Control);
+                DrawLine(control, controls[i + 1].Control);
             }
 
             //if (control.Type == entities.livelox.ControlType.Start && controls.Count > i+1)
@@ -107,7 +107,8 @@ internal class CourseDrawer
     /// </summary>
     /// <param name="control">The start</param>
     /// <param name="nextControl">The first control (to determine angle)</param>
-    private void DrawStart(Control control, Control nextControl) {
+    private void DrawStart(Control control, Control nextControl)
+    {
         var coord = new Coordinate() { Latitude = control.Position.Latitude, Longitude = control.Position.Longitude };
         var pos = coord.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
 
@@ -136,7 +137,7 @@ internal class CourseDrawer
         // Angle to first control
         var coord1 = new Coordinate() { Latitude = nextControl.Position.Latitude, Longitude = nextControl.Position.Longitude };
         var pos1 = coord1.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
-        var angle = LinearAlgebraUtil.GetAngleR(pos1-pos) + Math.PI / 2;
+        var angle = LinearAlgebraUtil.GetAngleR(pos1 - pos) + Math.PI / 2;
 
         Polygon triangle = new Polygon(outer.Select(p => LinearAlgebraUtil.RotateF(p, pos, -angle)).ToArray());
         IPath trianglePath = triangle.Clip(new Polygon(inner.Select(p => LinearAlgebraUtil.RotateF(p, pos, -angle)).ToArray()));
@@ -148,7 +149,8 @@ internal class CourseDrawer
     /// Draws a finish symbol
     /// </summary>
     /// <param name="control">The finish control</param>
-    private void DrawFinish(Control control) {
+    private void DrawFinish(Control control)
+    {
         var ctrlCoord = new Coordinate
         {
             Latitude = control.Position.Latitude,
@@ -185,7 +187,8 @@ internal class CourseDrawer
     /// </summary>
     /// <param name="control1">First control</param>
     /// <param name="control2">Second control</param>
-    private void DrawLine(Control control1, Control control2) {
+    private void DrawLine(Control control1, Control control2)
+    {
         var controlLine = GetControlToControlLine(control1, control2);
         var points = new PointF[] {
             new PointF((float)controlLine.from.X, (float)controlLine.from.Y),
@@ -202,7 +205,8 @@ internal class CourseDrawer
     /// <param name="control1">First control</param>
     /// <param name="control2">Second control</param>
     /// <returns>A structure type with the first and second xy-point of the line</returns>
-    private (PointD from, PointD to) GetControlToControlLine(Control control1, Control control2) {
+    private (PointD from, PointD to) GetControlToControlLine(Control control1, Control control2)
+    {
         var coord1 = new Coordinate() { Latitude = control1.Position.Latitude, Longitude = control1.Position.Longitude };
         var coord2 = new Coordinate() { Latitude = control2.Position.Latitude, Longitude = control2.Position.Longitude };
         var pos1 = coord1.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
@@ -245,7 +249,8 @@ internal class CourseDrawer
     /// <param name="previous">previous control</param>
     /// <param name="next">next control</param>
     /// <param name="controlNumber">control number</param>
-    private void DrawControlNumber(Control control, Control previous, Control next, int controlNumber) {
+    private void DrawControlNumber(Control control, Control previous, Control next, int controlNumber)
+    {
         // The control number 
         var posPrevCoord = new Coordinate() { Latitude = previous.Position.Latitude, Longitude = previous.Position.Longitude };
         var posCoord = new Coordinate() { Latitude = control.Position.Latitude, Longitude = control.Position.Longitude };

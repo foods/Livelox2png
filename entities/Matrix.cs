@@ -1178,7 +1178,7 @@ public class Matrix : System.ICloneable, System.Runtime.Serialization.ISerializa
         {
             throw new Exception("Method only valid for 3x1 matrices");
         }
-        return new PointD(GetElement(0, 0), GetElement(1, 0)); 
+        return new PointD(GetElement(0, 0), GetElement(1, 0));
     }
 }
 

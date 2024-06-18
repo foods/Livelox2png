@@ -41,7 +41,8 @@ public class Coordinate
                           rho * (Math.Cos(phi0) * Math.Sin(phi) - Math.Sin(phi0) * Math.Cos(phi) * Math.Cos(lambda - lambda0)));
     }
 
-    public PointD ProjectAndTransform(Coordinate projectionOrigin, Matrix transformationMatrix) {
+    public PointD ProjectAndTransform(Coordinate projectionOrigin, Matrix transformationMatrix)
+    {
         return (transformationMatrix * Project(projectionOrigin).To3x1Matrix()).ToPointD();
     }
 
