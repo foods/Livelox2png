@@ -46,6 +46,21 @@ internal class CourseDrawer
     {
         var course = activityExtractor.GetCourse();
         var controls = course.Controls ?? [];
+        var controlIndex = 0;
+
+        var getNextControl = (int ctrlIndex) => {
+            while(ctrlIndex < controls.Count)
+            {
+                if (controls[ctrlIndex].Control.Type == entities.livelox.ControlType.Control ||
+                controls[ctrlIndex].Control.Type == entities.livelox.ControlType.Finish)
+                {
+                    return controls[ctrlIndex].Control;
+                }
+                ctrlIndex++;
+            }
+            return null;
+        };
+
         for (var i = 0; i < controls.Count; i++)
         {
             var control = controls[i].Control;
@@ -59,23 +74,19 @@ internal class CourseDrawer
                     }
                     break;
                 case entities.livelox.ControlType.Control:
+                    controlIndex++;
                     DrawControlRing(control);
-                    DrawControlNumber(control, controls[i - 1].Control, controls[i + 1].Control, i);
+                    DrawControlNumber(control, controls[i - 1].Control, getNextControl(i+1), controlIndex);
                     break;
                 case entities.livelox.ControlType.Finish:
                     DrawFinish(control);
                     break;
 
             }
-            if (controls.Count > i + 1)
+            if (controls.Count > i + 1 && controls[i + 1].Control.Type != entities.livelox.ControlType.Start)
             {
                 DrawLine(control, controls[i + 1].Control);
             }
-
-            //if (control.Type == entities.livelox.ControlType.Start && controls.Count > i+1)
-            //{
-            //    DrawStart(control, controls[i + 1].Control);
-            //}
         }
     }
 
