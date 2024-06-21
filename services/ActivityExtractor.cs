@@ -28,6 +28,7 @@ internal class ActivityExtractor
         }
         var defaultPerson = config.GetSection("DefaultPerson").Get<DefaultPerson>();
         var match = defaultPerson != null ? activity.Participants.FirstOrDefault(p =>
+            p.Result != null &&
             p.Result.PersonFirstName == defaultPerson.PersonFirstName &&
             p.Result.PersonLastName == defaultPerson.PersonLastName &&
             p.Result.OrganisationName == defaultPerson.OrganisationName) : null;

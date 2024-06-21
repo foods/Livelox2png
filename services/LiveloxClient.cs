@@ -105,4 +105,14 @@ internal class LiveloxClient
         mapData.Position = 0;
         return Image.Load(mapData);
     }
+
+    public async Task<Stream> FetchMapImage(string url)
+    {
+        Console.WriteLine("Downloading course image");
+        var mapData = new MemoryStream();
+        using var progress = new ProgressBar();
+        await httpClient.DownloadAsync(url, mapData, progress, CancellationToken.None);
+        mapData.Position = 0;
+        return mapData;
+    }
 }

@@ -10,4 +10,5 @@ internal class Course
     public double ControlConnectionLineWidth { get; set; }
     public required List<CourseControl> Controls { get; set; }
     public required List<CompetitionClass> Classes { get; set; }
+    public List<CourseImage>? CourseImages { get; set; }
 }

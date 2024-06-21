@@ -10,35 +10,30 @@ var config = new ConfigurationBuilder()
 var defaultPerson = config.GetSection("DefaultPerson").Get<DefaultPerson>();
 
 Console.WriteLine("-- Livelox map with course extractor --");
-
-//if (args.Length != 2)
-//{
-//    Console.WriteLine("Missing argument, should be URL of event, like 'https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272&tab=player'");
-//    return;
-//}
-//Uri classBlobUri;
-//try
-//{
-//    classBlobUri = new Uri(args[1]);
-//}
-//catch (UriFormatException)
-//{
-//    Console.WriteLine("Incorrect URL");
-//    return;
-//}
+Console.WriteLine("");
 
 //string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272&tab=player";
 //string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-2/H45?classId=770267&tab=player";
-string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272&tab=player";
+//string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272&tab=player";
+//string classBlobUri = "https://www.livelox.com/Viewer/Natt-KM/H40?classId=685619&tab=player";
+//string classBlobUri = "https://www.livelox.com/Viewer/Fasta-kontroller-Adran/Sommarbana?classId=497742";
+
+string? classBlobUrl = "";
+
+while (!Uri.TryCreate(classBlobUrl, UriKind.Absolute, out _))
+{
+    Console.WriteLine("Enter Livelox URL of course:");
+    classBlobUrl = Console.ReadLine();
+}
 
 var liveloxClient = new LiveloxClient();
-var activity = await liveloxClient.FetchActivity(classBlobUri);
+var activity = await liveloxClient.FetchActivity(classBlobUrl);
 
 using var image = await liveloxClient.FetchMapFile(activity.Map.Url);
 
 var map = new Livelox2png.entities.Map(activity);
 
 var courseDrawer = new CourseDrawer(map, activity, image, config);
-courseDrawer.Draw();
+await courseDrawer.Draw();
 
 await MapSaver.SaveMap(image, activity, config);

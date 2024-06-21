@@ -42,9 +42,18 @@ internal class CourseDrawer
     /// <summary>
     /// Draws the course (based on the participant) onto the map image
     /// </summary>
-    public void Draw()
+    public async Task Draw()
     {
         var course = activityExtractor.GetCourse();
+        if (course.CourseImages != null && course.CourseImages.Any())
+        {
+            foreach(var courseImage in course.CourseImages)
+            {
+                await CourseImageDrawer.DrawCourseImage(image, courseImage);
+            }
+            // Don't plot the course if there are course images
+            return;
+        }
         var controls = course.Controls ?? [];
         var controlIndex = 0;
 

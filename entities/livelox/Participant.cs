@@ -6,5 +6,5 @@ internal class Participant
     public int ClassId { get; set; }
     public TimeInterval? TimeInterval { get; set; }
     public TimeInterval? SessionTimeInterval { get; set; }
-    public required Result Result { get; set; }
+    public Result? Result { get; set; }
 }
