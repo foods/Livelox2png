@@ -22,8 +22,8 @@ internal static class FinishDrawer
 
         // Do four circles, clipping every other
 
-        var bigOuter = control.SymbolSize != 0.0 ? (float)control.SymbolSize * 2.5f : 34f;
-        var lineWidth = control.SymbolLineWidth != 0.0 ? (float)control.SymbolLineWidth * 2.3f : 4f;
+        var bigOuter = control.SymbolSize != 0.0 ? (float)control.SymbolSize * (float)map.Resolution * 0.9f : 34f;
+        var lineWidth = control.SymbolLineWidth != 0.0 ? (float)control.SymbolLineWidth * (float)map.Resolution : 4f;
         var bigInner = bigOuter - lineWidth;
 
         var smallOuter = bigOuter * 0.7f;

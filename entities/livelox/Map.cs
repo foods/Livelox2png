@@ -9,6 +9,7 @@ internal class Map
     public required Rectangle Polygon { get; set; }
     public required Projection DefaultProjection { get; set; }
     public double Rotation { get; set; }
+    public double Resolution { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }
 }

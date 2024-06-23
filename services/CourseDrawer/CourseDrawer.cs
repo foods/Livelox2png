@@ -83,7 +83,7 @@ internal class CourseDrawer
                 case entities.livelox.ControlType.Control:
                     controlIndex++;
                     ControlRingDrawer.DrawControlRing(control, map, DrawPath);
-                    ControlNumberDrawer.DrawControlNumber(control, controls[i - 1].Control, getNextControl(i + 1), controlIndex, image);
+                    ControlNumberDrawer.DrawControlNumber(control, controls[i - 1].Control, getNextControl(i + 1), controlIndex, image, map);
                     break;
                 case entities.livelox.ControlType.Finish:
                     FinishDrawer.DrawFinish(control, map, DrawPath);

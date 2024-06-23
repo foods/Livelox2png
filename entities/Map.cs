@@ -8,10 +8,15 @@ internal class Map
     public int Width { get; set; }
     public int Height { get; set; }
     public MapCorners Corners { get; set; }
-    public double ScaleX { get; set; }
-    public double ScaleY { get; set; }
+    //public double ScaleX { get; set; }
+    //public double ScaleY { get; set; }
     public Coordinate ProjectionOrigin { get; set; }
     public Matrix ProjectionMatrix { get; set; }
+
+    /// <summary>
+    /// Pixels per meter
+    /// </summary>
+    public double Resolution { get; set; }
 
     public Map(Activity activity)
     {
@@ -45,29 +50,28 @@ internal class Map
                 Longitude = activity.Map.Polygon.Vertices[3].Longitude,
             },
         };
+        Resolution = activity.Map.Resolution;
 
-        var mapHeightDegrees = Math.Sqrt(
-            (Corners.NorthEast.Longitude - Corners.SouthEast.Longitude) * (Corners.NorthEast.Longitude - Corners.SouthEast.Longitude) +
-            (Corners.NorthEast.Latitude - Corners.SouthEast.Latitude) * (Corners.NorthEast.Latitude - Corners.SouthEast.Latitude));
+        //var mapHeightDegrees = Math.Sqrt(
+        //    (Corners.NorthEast.Longitude - Corners.SouthEast.Longitude) * (Corners.NorthEast.Longitude - Corners.SouthEast.Longitude) +
+        //    (Corners.NorthEast.Latitude - Corners.SouthEast.Latitude) * (Corners.NorthEast.Latitude - Corners.SouthEast.Latitude));
 
-        var mapHeightDegreesCtrl = Math.Sqrt(
-            (Corners.NorthWest.Longitude - Corners.SouthWest.Longitude) * (Corners.NorthWest.Longitude - Corners.SouthWest.Longitude) +
-            (Corners.NorthWest.Latitude - Corners.SouthWest.Latitude) * (Corners.NorthWest.Latitude - Corners.SouthWest.Latitude));
+        //var mapHeightDegreesCtrl = Math.Sqrt(
+        //    (Corners.NorthWest.Longitude - Corners.SouthWest.Longitude) * (Corners.NorthWest.Longitude - Corners.SouthWest.Longitude) +
+        //    (Corners.NorthWest.Latitude - Corners.SouthWest.Latitude) * (Corners.NorthWest.Latitude - Corners.SouthWest.Latitude));
 
-        var mapHeightDiff = mapHeightDegrees - mapHeightDegreesCtrl;
+        //var mapWidthDegrees = Math.Sqrt(
+        //    (Corners.NorthEast.Longitude - Corners.NorthWest.Longitude) * (Corners.NorthEast.Longitude - Corners.NorthWest.Longitude) +
+        //    (Corners.NorthWest.Latitude - Corners.NorthEast.Latitude) * (Corners.NorthWest.Latitude - Corners.NorthEast.Latitude));
 
-        var mapWidthDegrees = Math.Sqrt(
-            (Corners.NorthEast.Longitude - Corners.NorthWest.Longitude) * (Corners.NorthEast.Longitude - Corners.NorthWest.Longitude) +
-            (Corners.NorthWest.Latitude - Corners.NorthEast.Latitude) * (Corners.NorthWest.Latitude - Corners.NorthEast.Latitude));
+        //var mapWidthDegreesCtrl = Math.Sqrt(
+        //    (Corners.SouthEast.Longitude - Corners.SouthWest.Longitude) * (Corners.SouthEast.Longitude - Corners.SouthWest.Longitude) +
+        //    (Corners.SouthWest.Latitude - Corners.SouthEast.Latitude) * (Corners.SouthWest.Latitude - Corners.SouthEast.Latitude));
 
-        var mapWidthDegreesCtrl = Math.Sqrt(
-            (Corners.SouthEast.Longitude - Corners.SouthWest.Longitude) * (Corners.SouthEast.Longitude - Corners.SouthWest.Longitude) +
-            (Corners.SouthWest.Latitude - Corners.SouthEast.Latitude) * (Corners.SouthWest.Latitude - Corners.SouthEast.Latitude));
+        //var mapWidthDiff = mapWidthDegrees - mapWidthDegreesCtrl;
 
-        var mapWidthDiff = mapWidthDegrees - mapWidthDegreesCtrl;
-
-        ScaleX = (double)Width * 2 / (mapWidthDegrees + mapWidthDegreesCtrl);
-        ScaleY = (double)Height * 2 / (mapHeightDegrees + mapHeightDegreesCtrl);
+        //ScaleX = (double)Width * 2 / (mapWidthDegrees + mapWidthDegreesCtrl);
+        //ScaleY = (double)Height * 2 / (mapHeightDegrees + mapHeightDegreesCtrl);
 
         ProjectionOrigin = new Coordinate
         {

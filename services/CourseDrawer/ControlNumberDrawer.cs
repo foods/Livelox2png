@@ -19,7 +19,7 @@ internal static class ControlNumberDrawer
     /// <param name="previous">previous control</param>
     /// <param name="next">next control</param>
     /// <param name="controlNumber">control number</param>
-    public static void DrawControlNumber(Control control, Control previous, Control next, int controlNumber, Image image)
+    public static void DrawControlNumber(Control control, Control previous, Control next, int controlNumber, Image image, Map map)
     {
         // The control number 
         var posPrevCoord = new Coordinate() { Latitude = previous.Position.Latitude, Longitude = previous.Position.Longitude };
@@ -35,12 +35,12 @@ internal static class ControlNumberDrawer
         var vectorNext = LinearAlgebraUtil.Normalize(posNext - pos);
         var avgVector = vectorPrev + vectorNext;
 
-        var distance = control.SymbolSize != 0.0 ? (float)control.SymbolSize * 4.8f : 70f;
+        var distance = control.SymbolSize != 0.0 ? (float)control.SymbolSize * map.Resolution * 2.0f : 70f;
 
         // Normalize the vector and subtract it from the pos to find coordinates for Control number
         var controlNumberPos = pos - LinearAlgebraUtil.Normalize(avgVector) * distance;
 
-        var fontSize = control.SymbolSize != 0.0 ? (int)(control.SymbolSize * 3) : 45;
+        var fontSize = control.SymbolSize != 0.0 ? (int)(control.SymbolSize * map.Resolution * 1.4f) : 45;
         var font = SystemFonts.CreateFont("Arial", fontSize, FontStyle.Bold);
         var origin = new System.Numerics.Vector2((float)controlNumberPos.X, (float)controlNumberPos.Y);
         var textOptions = new RichTextOptions(font)

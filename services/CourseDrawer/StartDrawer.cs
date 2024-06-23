@@ -18,8 +18,8 @@ internal static class StartDrawer
         var pos = coord.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
 
         // a = side length of triangle
-        var aOuter = control.SymbolSize != 0.0 ? (float)Math.Min(control.SymbolSize, 14f) * 4.6f : 62f;
-        var aInner = control.SymbolLineWidth != 0.0 ? aOuter - (float)control.SymbolLineWidth * 8f : 50f;
+        var aOuter = control.SymbolSize != 0.0 ? (float)control.SymbolSize * map.Resolution * 0.3f : 62f;
+        var aInner = control.SymbolLineWidth != 0.0 ? aOuter - (float)control.SymbolLineWidth * map.Resolution * 3f : 50f;
 
         // r = radius of inscribed circle
         var rOuter = Math.Sqrt(3) * aOuter / 6;

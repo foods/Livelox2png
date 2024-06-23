@@ -22,7 +22,7 @@ internal static class LineDrawer
         var pos2 = coord2.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
 
         var symbolSize = Math.Min(control1.SymbolSize, control2.SymbolSize);
-        var clipLength = symbolSize != 0.0 ? (float)symbolSize * 3.0f : 40f;
+        var clipLength = symbolSize != 0.0 ? (float)symbolSize * (float)map.Resolution * 1.2f : 40f;
 
         var centerToCenterDist = LinearAlgebraUtil.LineDistance(pos1, pos2);
         var fromCenterLength = centerToCenterDist / 2 - clipLength;
@@ -60,7 +60,7 @@ internal static class LineDrawer
             new((float)controlLine.from.X, (float)controlLine.from.Y),
             new((float)controlLine.to.X, (float)controlLine.to.Y),
         };
-        var lineWidth = (float)Math.Max(Math.Max(control1.SymbolLineWidth, control2.SymbolLineWidth), 4f);
+        var lineWidth = (float)Math.Max(Math.Max(control1.SymbolLineWidth * map.Resolution, control2.SymbolLineWidth * map.Resolution), 4f);
 
         image.Mutate(x => x.DrawLine(drawingOptions, Pens.Solid(DrawingConstants.Purple, lineWidth), points));
     }
