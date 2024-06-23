@@ -1,5 +1,6 @@
 ﻿using Livelox2png.configuration;
 using Livelox2png.services;
+using Livelox2png.services.CourseDrawer;
 using Microsoft.Extensions.Configuration;
 
 var config = new ConfigurationBuilder()
