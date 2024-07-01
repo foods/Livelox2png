@@ -34,7 +34,10 @@ internal class LiveloxClient
         req.Content = new StringContent(JsonSerializer.Serialize(requestObj), Encoding.UTF8, "application/json");
 
         var response = await httpClient.SendAsync(req);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new FatalException("Unable to download class info - this event is likely not publicly available");
+        }
 
         var classInfo = await JsonSerializer.DeserializeAsync<ClassInfo>(response.Content.ReadAsStream(), jsonSerializerOptions);
 
@@ -48,7 +51,10 @@ internal class LiveloxClient
     private async Task<Activity> FetchClassBlob(Uri classBlobUri)
     {
         var response = await httpClient.GetAsync(classBlobUri);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new FatalException("Unable to download class info - this event is likely not publicly available");
+        }
 
         var activity = await JsonSerializer.DeserializeAsync<Activity>(response.Content.ReadAsStream(), jsonSerializerOptions);
 
@@ -64,7 +70,10 @@ internal class LiveloxClient
         req.Content = new StringContent(JsonSerializer.Serialize(requestObj), Encoding.UTF8, "application/json");
 
         var response = await httpClient.SendAsync(req);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new FatalException("Unable to download class info - this event is likely not publicly available");
+        }
 
         var classInfo = await JsonSerializer.DeserializeAsync<Activity>(response.Content.ReadAsStream(), jsonSerializerOptions);
 

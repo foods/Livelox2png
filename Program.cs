@@ -1,6 +1,7 @@
 ﻿using Livelox2png.configuration;
 using Livelox2png.services;
 using Livelox2png.services.CourseDrawer;
+using Livelox2png.util;
 using Microsoft.Extensions.Configuration;
 
 var config = new ConfigurationBuilder()
@@ -20,7 +21,10 @@ Console.WriteLine("");
 //string classBlobUri = "https://www.livelox.com/Viewer/Fasta-kontroller-Adran/Sommarbana?classId=497742";
 
 string? classBlobUrl = "";
-
+if (args.Length > 0)
+{
+    classBlobUrl = args[0];
+}
 while (!Uri.TryCreate(classBlobUrl, UriKind.Absolute, out _))
 {
     Console.WriteLine("Enter Livelox URL of course:");
@@ -28,13 +32,25 @@ while (!Uri.TryCreate(classBlobUrl, UriKind.Absolute, out _))
 }
 
 var liveloxClient = new LiveloxClient();
-var activity = await liveloxClient.FetchActivity(classBlobUrl);
+try
+{
+    var activity = await liveloxClient.FetchActivity(classBlobUrl);
 
-using var image = await liveloxClient.FetchMapFile(activity.Map.Url);
+    using var image = await liveloxClient.FetchMapFile(activity.Map.Url);
 
-var map = new Livelox2png.entities.Map(activity);
+    var map = new Livelox2png.entities.Map(activity);
 
-var courseDrawer = new CourseDrawer(map, activity, image, config);
-await courseDrawer.Draw();
+    var courseDrawer = new CourseDrawer(map, activity, image, config);
+    await courseDrawer.Draw();
 
-await MapSaver.SaveMap(image, activity, config);
+    await MapSaver.SaveMap(image, activity, config);
+}
+catch (FatalException e)
+{
+    Console.WriteLine(e.Message);
+}
+catch (Exception e)
+{
+    Console.WriteLine("A fatal error occurred");
+    Console.Write(e);
+}
