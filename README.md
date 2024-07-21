@@ -13,4 +13,3 @@ Edit the `appsettings.json` file. Livelox2png will try to match `DefaultPerson` 
 * No clipping of control rings
 * No clipping of connection lines
 * No nice display of control numbers on reused controls (loops)
-* Connection lines inside controls at times
