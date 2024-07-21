@@ -14,7 +14,7 @@ internal static class LineDrawer
     /// <param name="control1">First control</param>
     /// <param name="control2">Second control</param>
     /// <returns>A structure type with the first and second xy-point of the line</returns>
-    private static (PointD from, PointD to) GetControlToControlLine(Map map, Control control1, Control control2)
+    private static (PointD from, PointD to, bool tooShort) GetControlToControlLine(Map map, Control control1, Control control2)
     {
         var coord1 = new Coordinate() { Latitude = control1.Position.Latitude, Longitude = control1.Position.Longitude };
         var coord2 = new Coordinate() { Latitude = control2.Position.Latitude, Longitude = control2.Position.Longitude };
@@ -31,7 +31,8 @@ internal static class LineDrawer
         {
             return (
                 new PointD(pos1.X, pos1.Y > pos2.Y ? pos1.Y - fromCenterLength : pos1.Y + fromCenterLength),
-                new PointD(pos2.X, pos2.Y > pos1.Y ? pos2.Y - fromCenterLength : pos2.Y + fromCenterLength));
+                new PointD(pos2.X, pos2.Y > pos1.Y ? pos2.Y - fromCenterLength : pos2.Y + fromCenterLength),
+                false);
         }
 
         var k = (pos2.Y - pos1.Y) / (pos2.X - pos1.X);
@@ -45,7 +46,7 @@ internal static class LineDrawer
 
         var centerOfLine = new PointD((pos1.X + pos2.X) / 2, (pos1.Y + pos2.Y) / 2);
 
-        return (centerOfLine - diffVector, centerOfLine + diffVector);
+        return (centerOfLine - diffVector, centerOfLine + diffVector, fromCenterLength <= 0);
     }
 
     /// <summary>
@@ -56,11 +57,16 @@ internal static class LineDrawer
     public static void DrawLine(Control control1, Control control2, Map map, Image image, DrawingOptions drawingOptions)
     {
         var controlLine = GetControlToControlLine(map, control1, control2);
+        if (controlLine.tooShort)
+        {
+            // Don't draw a line if there isn't space to do so
+            return;
+        }
         var points = new PointF[] {
             new((float)controlLine.from.X, (float)controlLine.from.Y),
             new((float)controlLine.to.X, (float)controlLine.to.Y),
         };
-        var lineWidth = (float)Math.Max(Math.Max(control1.SymbolLineWidth * map.Resolution, control2.SymbolLineWidth * map.Resolution), 4f);
+        var lineWidth = (float)Math.Max(Math.Max(control1.SymbolLineWidth * map.Resolution, control2.SymbolLineWidth * map.Resolution), 6f * map.Resolution);
 
         image.Mutate(x => x.DrawLine(drawingOptions, Pens.Solid(DrawingConstants.Purple, lineWidth), points));
     }

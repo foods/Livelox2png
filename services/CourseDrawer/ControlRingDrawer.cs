@@ -19,10 +19,10 @@ internal static class ControlRingDrawer
             Longitude = control.Position.Longitude
         };
         var posP = ctrlCoord.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
-
-        //var size = control.SymbolSize != 0.0 ? (float)control.SymbolSize * 2.3f : 31f;
-        var size = control.SymbolSize != 0.0 ? (float)control.SymbolSize * (float)map.Resolution : 31f;
-        var innerSize = control.SymbolLineWidth != 0.0 ? size - (float)control.SymbolLineWidth * (float)map.Resolution : 27f;
+        var res = (float)map.Resolution;
+        
+        var size = control.SymbolSize != 0.0 ? (float)control.SymbolSize * res : 40f * res;
+        var innerSize = control.SymbolLineWidth != 0.0 ? size - (float)control.SymbolLineWidth * res : 35f * res;
 
         EllipsePolygon outerCircle = new EllipsePolygon((float)posP.X, (float)posP.Y, size);
         // Cut out a circle

@@ -21,9 +21,9 @@ internal static class FinishDrawer
         var posP = ctrlCoord.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
 
         // Do four circles, clipping every other
-
-        var bigOuter = control.SymbolSize != 0.0 ? (float)control.SymbolSize * (float)map.Resolution * 0.9f : 34f;
-        var lineWidth = control.SymbolLineWidth != 0.0 ? (float)control.SymbolLineWidth * (float)map.Resolution : 4f;
+        var res = (float)map.Resolution;
+        var bigOuter = control.SymbolSize != 0.0 ? (float)control.SymbolSize * res * 0.9f : 48f * res;
+        var lineWidth = control.SymbolLineWidth != 0.0 ? (float)control.SymbolLineWidth * res : 5.5f * res;
         var bigInner = bigOuter - lineWidth;
 
         var smallOuter = bigOuter * 0.7f;
