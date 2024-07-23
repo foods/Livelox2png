@@ -19,7 +19,7 @@ internal static class ControlNumberDrawer
     /// <param name="previous">previous control</param>
     /// <param name="next">next control</param>
     /// <param name="controlNumber">control number</param>
-    public static void DrawControlNumber(Control control, Control previous, Control next, int controlNumber, Image image, Map map)
+    public static void DrawControlNumber(Control control, Control previous, Control next, List<int> controlNumbers, Image image, Map map)
     {
         // The control number 
         var posPrevCoord = new Coordinate() { Latitude = previous.Position.Latitude, Longitude = previous.Position.Longitude };
@@ -50,7 +50,8 @@ internal static class ControlNumberDrawer
             HorizontalAlignment = HorizontalAlignment.Center,
         };
 
-        image.Mutate(x => x.DrawText(textOptions, controlNumber.ToString(), Brushes.Solid(DrawingConstants.Purple), Pens.Solid(Color.White, 1)));
+        var text = string.Join("/", controlNumbers.Select(n => n.ToString()));
+        image.Mutate(x => x.DrawText(textOptions, text, Brushes.Solid(DrawingConstants.Purple), Pens.Solid(Color.White, 1)));
     }
 
 }
