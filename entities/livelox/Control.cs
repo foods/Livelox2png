@@ -19,4 +19,5 @@ internal class Control
     public double SymbolSize { get; set; }
     public double SymbolLineWidth { get; set; }
     public double MapScale { get; set; }
+    public List<CircleGap>? CircleGaps { get; set; }
 }
