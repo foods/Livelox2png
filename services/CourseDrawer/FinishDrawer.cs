@@ -22,8 +22,12 @@ internal static class FinishDrawer
 
         // Do four circles, clipping every other
         var res = (float)map.Resolution;
-        var bigOuter = control.SymbolSize != 0.0 ? (float)control.SymbolSize * res * 0.9f : 48f * res;
-        var lineWidth = control.SymbolLineWidth != 0.0 ? (float)control.SymbolLineWidth * res : 5.5f * res;
+        var bigOuter = control.SymbolSize != 0.0 ?
+            (float)control.SymbolSize * res * 0.9f :
+            (float)(48f * res * control.MapScale / 15000f);
+        var lineWidth = control.SymbolLineWidth != 0.0 ?
+            (float)control.SymbolLineWidth * res :
+            (float)(5.5f * res * control.MapScale / 15000f);
         var bigInner = bigOuter - lineWidth;
 
         var smallOuter = bigOuter * 0.7f;

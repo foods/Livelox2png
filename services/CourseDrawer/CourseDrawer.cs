@@ -46,7 +46,7 @@ internal class CourseDrawer
         {
             foreach (var courseImage in course.CourseImages)
             {
-                await CourseImageDrawer.DrawCourseImage(image, courseImage);
+                await CourseImageDrawer.DrawCourseImage(image, courseImage, map);
             }
             // Don't plot the course if there are course images
             return;
@@ -90,7 +90,11 @@ internal class CourseDrawer
                     break;
 
             }
-            if (controls.Count > i + 1 && controls[i + 1].Control.Type != entities.livelox.ControlType.Start)
+            if (controls[i].ConnectionLines != null)
+            {
+                LineDrawer.DrawLine(control, map, image, drawingOptions, controls[i].ConnectionLines!);
+            }
+            else if (controls.Count > i + 1 && controls[i + 1].Control.Type != entities.livelox.ControlType.Start)
             {
                 LineDrawer.DrawLine(control, controls[i + 1].Control, map, image, drawingOptions);
             }

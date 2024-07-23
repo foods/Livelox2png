@@ -14,14 +14,14 @@ var defaultPerson = config.GetSection("DefaultPerson").Get<DefaultPerson>();
 Console.WriteLine("-- Livelox map with course extractor --");
 Console.WriteLine("");
 
-//string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272&tab=player";
-//string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-2/H45?classId=770267&tab=player";
-//string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272&tab=player";
-//string classBlobUri = "https://www.livelox.com/Viewer/Natt-KM/H40?classId=685619&tab=player";
+//string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272";
+//string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-2/H45?classId=770267";
+//string classBlobUri = "https://www.livelox.com/Viewer/Stockholm-City-Cup-1/H45?classId=761272";
+//string classBlobUri = "https://www.livelox.com/Viewer/Natt-KM/H40?classId=685619"; <- CourseImage
 //string classBlobUri = "https://www.livelox.com/Viewer/Fasta-kontroller-Adran/Sommarbana?classId=497742";
-// https://www.livelox.com/Viewer/SM-traning-1-2/Svart?classId=477888&tab=player <- clipping of control rings
-// https://www.livelox.com/Viewer/Motionsorientering-i-Palsjo-skog/Lang?classId=797486&tab=player <- reused controls && cut off control lines
-// https://www.livelox.com/Viewer/Trekvallars-3-lang/H45?classId=797945 ← Too big control rings, connection lines inside rings
+// https://www.livelox.com/Viewer/SM-traning-1-2/Svart?classId=477888 <- clipping of control rings
+// https://www.livelox.com/Viewer/Motionsorientering-i-Palsjo-skog/Lang?classId=797486 <- reused controls && cut off control lines
+// https://www.livelox.com/Viewer/O-Ringen-Smalandskusten-etapp-1-lang/H45 <- CourseImage not aligned with map corners
 
 string? classBlobUrl = "";
 if (args.Length > 0)

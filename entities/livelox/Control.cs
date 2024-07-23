@@ -18,5 +18,5 @@ internal class Control
     public required string Code { get; set; }
     public double SymbolSize { get; set; }
     public double SymbolLineWidth { get; set; }
-
+    public double MapScale { get; set; }
 }

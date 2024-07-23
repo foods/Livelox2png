@@ -2,6 +2,7 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using Control = Livelox2png.entities.livelox.Control;
+using ConnectionLine = Livelox2png.entities.livelox.ConnectionLine;
 using SixLabors.ImageSharp.Processing;
 
 namespace Livelox2png.services.CourseDrawer;
@@ -66,9 +67,33 @@ internal static class LineDrawer
             new((float)controlLine.from.X, (float)controlLine.from.Y),
             new((float)controlLine.to.X, (float)controlLine.to.Y),
         };
-        var lineWidth = (float)Math.Max(Math.Max(control1.SymbolLineWidth * map.Resolution, control2.SymbolLineWidth * map.Resolution), 6f * map.Resolution);
+        var lineWidth = control1.SymbolLineWidth != 0.0 ?
+            (float)Math.Max(control1.SymbolLineWidth * map.Resolution, control2.SymbolLineWidth * map.Resolution) :
+            (float)(6f * map.Resolution * control1.MapScale / 15000f);
 
         image.Mutate(x => x.DrawLine(drawingOptions, Pens.Solid(DrawingConstants.Purple, lineWidth), points));
     }
 
+    /// <summary>
+    /// Draws pre-specified control lines
+    /// </summary>
+    public static void DrawLine(Control control, Map map, Image image, DrawingOptions drawingOptions, List<ConnectionLine> connections)
+    {
+        foreach (var connectionLine in connections)
+        {
+            var coord1 = new Coordinate() { Latitude = connectionLine.Start.Latitude, Longitude = connectionLine.Start.Longitude };
+            var coord2 = new Coordinate() { Latitude = connectionLine.End.Latitude, Longitude = connectionLine.End.Longitude };
+            var pos1 = coord1.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
+            var pos2 = coord2.ProjectAndTransform(map.ProjectionOrigin, map.ProjectionMatrix);
+            var points = new PointF[] {
+                new((float)pos1.X, (float)pos1.Y),
+                new((float)pos2.X, (float)pos2.Y),
+            };
+            var lineWidth = control.SymbolLineWidth != 0.0 ?
+                (float)(control.SymbolLineWidth * map.Resolution):
+                (float)(6f * map.Resolution * control.MapScale / 15000f);
+
+            image.Mutate(x => x.DrawLine(drawingOptions, Pens.Solid(DrawingConstants.Purple, lineWidth), points));
+        }
+    }
 }
